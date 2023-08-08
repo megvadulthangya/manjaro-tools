@@ -403,6 +403,7 @@ make_image_live() {
         configure_live_image "${path}"
 
 	# mask some systemd targets on live-session
+	mkdir -p "${path}"/etc/systemd/system
 	ln -sfv /dev/null "${path}"/etc/systemd/system/sleep.target
 	ln -sfv /dev/null "${path}"/etc/systemd/system/suspend.target
 	ln -sfv /dev/null "${path}"/etc/systemd/system/hibernate.target
