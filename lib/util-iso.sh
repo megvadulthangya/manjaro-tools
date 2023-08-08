@@ -402,6 +402,12 @@ make_image_live() {
         copy_overlay "${profile_dir}/live-overlay" "${path}"
         configure_live_image "${path}"
 
+	# mask some systemd targets on live-session
+	ln -sfv /dev/null "${path}"/etc/systemd/system/sleep.target
+	ln -sfv /dev/null "${path}"/etc/systemd/system/suspend.target
+	ln -sfv /dev/null "${path}"/etc/systemd/system/hibernate.target
+	ln -sfv /dev/null "${path}"/etc/systemd/system/hybrid-sleep.target
+
         if [[ -e "${path}/usr/share/calamares/branding/manjaro/calamares-sidebar.qml" ]]; then
             configure_branding "${path}"
             msg "Done [Distribution: Release ${dist_release} Codename ${dist_codename}]"
