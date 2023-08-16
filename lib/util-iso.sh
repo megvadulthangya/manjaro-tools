@@ -355,6 +355,10 @@ make_image_desktop() {
         mount_fs_root "${path}"
 
         chroot_create "${path}" "${packages}"
+        
+        #TODO: tmp workaround to fix Steam fat-tarball download
+        chroot-run "${path}" \
+        curl -v https://gitlab.com/evlaV/jupiter_steam-jupiter-stable-PKGBUILD/-/raw/5cd60f3cd66527a95f93e6fefd9371fd659a5aea/steam_jupiter_stable_bootstrapped_20230316.1.tar.xz -o /usr/lib/steam/bootstraplinux_ubuntu12_32.tar.xz
 
         pacman -Qr "${path}" > "${path}/desktopfs-pkgs.txt"
         cp "${path}/desktopfs-pkgs.txt" ${iso_dir}/$(gen_iso_fn)-pkgs.txt
