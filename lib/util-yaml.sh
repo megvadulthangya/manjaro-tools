@@ -421,11 +421,7 @@ write_settings_conf(){
     echo "        - services" >> "$conf" && write_services_conf
     echo "        - grubcfg" >> "$conf"
     echo "        - bootloader" >> "$conf" && write_bootloader_conf
-    if ${oem_used}; then
-        msg2 "Skipping to set postcfg module."
-    else
-        echo "        - postcfg" >> "$conf" && write_postcfg_conf
-    fi
+    echo "        - postcfg" >> "$conf" && write_postcfg_conf
     echo "        - umount" >> "$conf"
     echo "    - show:" >> "$conf"
     echo "        - finished" >> "$conf" && write_finished_conf
