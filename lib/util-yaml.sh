@@ -351,7 +351,7 @@ write_settings_conf(){
     if ${oem_used}; then
         msg2 "Skipping to show locale and keyboard modules."
     else
-        echo "        - locale" >> "$conf"
+        echo "        - locale" >> "$conf" && write_locale_conf
         echo "        - keyboard" >> "$conf"
     fi
     echo "        - partition" >> "$conf" && write_partition_conf
@@ -391,13 +391,13 @@ write_settings_conf(){
     fi
     echo "        - machineid" >> "$conf" && write_machineid_conf
     echo "        - fstab" >> "$conf"
-    echo "        - locale" >> "$conf"
     if ${oem_used}; then
-        msg2 "Skipping to set keyboard module."
+        msg2 "Skipping to set locale, keyboard and localecfg modules."
     else
+        echo "        - locale" >> "$conf"
         echo "        - keyboard" >> "$conf"
+        echo "        - localecfg" >> "$conf"
     fi
-    echo "        - localecfg" >> "$conf" && write_locale_conf
     echo "        - luksopenswaphookcfg" >> "$conf"
     echo "        - luksbootkeyfile" >> "$conf"
     echo "        - initcpiocfg" >> "$conf"
