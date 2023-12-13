@@ -391,13 +391,13 @@ write_settings_conf(){
     fi
     echo "        - machineid" >> "$conf" && write_machineid_conf
     echo "        - fstab" >> "$conf"
-    echo "        - locale" >> "$conf"
+    echo "        - locale" >> "$conf" && write_locale_conf
     if ${oem_used}; then
         msg2 "Skipping to set keyboard module."
     else
         echo "        - keyboard" >> "$conf"
     fi
-    echo "        - localecfg" >> "$conf" && write_locale_conf
+    echo "        - localecfg" >> "$conf"
     echo "        - luksopenswaphookcfg" >> "$conf"
     echo "        - luksbootkeyfile" >> "$conf"
     echo "        - initcpiocfg" >> "$conf"
