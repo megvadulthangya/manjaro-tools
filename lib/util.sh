@@ -836,7 +836,7 @@ create_chksums() {
 init_profiles() {
     _workdir='/usr/share/manjaro-tools'
     if [[ -d ${_workdir}/iso-profiles ]]; then
-        rm -Rf ${_workdir}/iso-profiles ]]
+        rm -Rf ${_workdir}/iso-profiles
     fi
     git clone -q --depth 1 -b ${branch} https://gitlab.manjaro.org/profiles-and-settings/iso-profiles.git ${_workdir}/iso-profiles/
 
