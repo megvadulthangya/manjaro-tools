@@ -131,6 +131,7 @@ usage() {
     echo "                       [default: ${kernel}]"
     echo '    -l                 Create permalink'
     echo '    -m                 Set SquashFS image mode to persistence'
+    echo '    -n                 Disable multilib'
     echo "    -p <profile>       Buildset or profile [default: ${build_list_iso}]"
     echo '    -o                 Enable office installer module'    
     echo '    -q                 Query settings and pretend build'
@@ -150,7 +151,7 @@ usage() {
 
 orig_argv=("$@")
 
-opts='p:a:b:r:t:k:g:d:cfzxmvqhilo'
+opts='p:a:b:r:t:k:g:d:cfzxmnvqhilo'
 
 while getopts "${opts}" arg; do
     case "${arg}" in
@@ -163,6 +164,7 @@ while getopts "${opts}" arg; do
         g) gpgkey="$OPTARG" ;;
         k) kernel="$OPTARG" ;;
         m) persist=true ;;
+        n) no_multilib=true ;;          # only exist if set here
         p) build_list_iso="$OPTARG" ;;
         q) pretend=true ;;
         r) chroots_iso="$OPTARG" ;;

@@ -409,6 +409,7 @@ load_profile_config(){
     [[ -z ${snap_channel} ]] && snap_channel="stable"
 
     [[ -z ${multilib} ]] && multilib="true"
+    [[ ${no_multilib} == 'true' ]] && multilib="false"
 
     [[ -z ${nonfree_mhwd} ]] && nonfree_mhwd="true"
 
@@ -516,6 +517,7 @@ reset_profile(){
     unset extra
     unset full_iso
     unset office_installer
+    unset no_multilib
 }
 
 check_profile(){
