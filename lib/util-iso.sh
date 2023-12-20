@@ -355,8 +355,30 @@ make_image_desktop() {
         chroot_create "${path}" "${packages}"
         
         #TODO: tmp workaround to fix Steam fat-tarball download
-        chroot-run "${path}" \
-        curl -v https://gitlab.com/evlaV/jupiter_steam-jupiter-stable-PKGBUILD/-/raw/5cd60f3cd66527a95f93e6fefd9371fd659a5aea/steam_jupiter_stable_bootstrapped_20230316.1.tar.xz -o /usr/lib/steam/bootstraplinux_ubuntu12_32.tar.xz
+        # Grab the steam bootstrap for first boot
+        PKG_URL="https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/steam-jupiter-stable-1.0.0.78-1.2-x86_64.pkg.tar.zst"
+        TMP_PKG="/tmp/package.pkg.tar.zst"
+        OUTPUT_FILE="/tmp/bootstraplinux_ubuntu12_32.tar.xz"
+        TARGET_FILE="${path}/usr/lib/steam/bootstraplinux_ubuntu12_32.tar.xz"
+        curl -o "$TMP_PKG" "$PKG_URL"
+        ZST_CHECKSUM=e94242167c5af25a87b6ffd92963fa8c15263b9a2838bcc0c3a36f918e5ba21c64984be20f718096ff1fed4ec52d49846239695b573db21e1c4ffce9cd493bc1
+        TMP_PKG_CHECKSUM=$(sha512sum ${TMP_PKG} | cut -d " " -f1)
+        if [[ "$ZST_CHECKSUM" == "$TMP_PKG_CHECKSUM" ]]; then
+            tar -I zstd -xvf "$TMP_PKG" usr/lib/steam/bootstraplinux_ubuntu12_32.tar.xz -O > "$OUTPUT_FILE"
+        else
+            msg "Download of ${PKG_URL} failed!"
+            exit 1
+        fi
+        XZ_CHECKSUM=17b7011fe7ae13834aa1f722724abfc3829ef8632bbabec2ae6b53ef0a9b6f1fc4db61b32056c62401e5aeb001e0f00d9e20f8ea045347b91cbe84ad4d0a919b
+        BS_CHECKSUM=$(sha512sum ${OUTPUT_FILE} | cut -d " " -f1)
+        if [[ "$XZ_CHECKSUM" == "$BS_CHECKSUM" ]]; then
+            mv "$OUTPUT_FILE" "$TARGET_FILE"
+        else
+            msg "Extraction of ${TARGET_FILE} failed!"
+            exit 1
+        fi
+        [[ -e "$TMP_PKG" ]] && rm "$TMP_PKG"
+        [[ -e "$OUTPUT_FILE" ]] && rm "$OUTPUT_FILE"
 
         pacman -Qr "${path}" > "${path}/desktopfs-pkgs.txt"
         cp "${path}/desktopfs-pkgs.txt" ${iso_dir}/$(gen_iso_fn)-pkgs.txt
