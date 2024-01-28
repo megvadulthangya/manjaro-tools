@@ -13,8 +13,7 @@ BIN_BASE = \
 	bin/manjaro-chroot \
 	bin/fstabgen \
 	bin/signfile \
-	bin/chroot-run \
-	bin/check-yaml
+	bin/chroot-run
 
 LIBS_BASE = \
 	lib/util.sh \
