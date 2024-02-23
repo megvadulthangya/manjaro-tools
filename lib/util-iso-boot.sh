@@ -18,7 +18,7 @@ prepare_initcpio(){
 
 prepare_initramfs(){
     cp ${DATADIR}/mkinitcpio.conf $1/etc/mkinitcpio-${iso_name}.conf
-    local _kernver=$(cat $1/usr/lib/modules/*/version)
+    local _kernver=$(cat $1/boot/*.kver|awk '{print $1}')
     if [[ -n ${gpgkey} ]]; then
         su ${OWNER} -c "gpg --export ${gpgkey} >${USERCONFDIR}/gpgkey"
         exec 17<>${USERCONFDIR}/gpgkey
