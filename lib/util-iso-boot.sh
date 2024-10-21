@@ -18,13 +18,13 @@ prepare_initcpio(){
 
 prepare_initramfs(){
     cp ${DATADIR}/mkinitcpio.conf $1/etc/mkinitcpio-${iso_name}.conf
-    local _profile=$(cat $1/lib/modules/*/pkgbase)
+    local _kernver=$(ls $1/lib/modules)
     if [[ -n ${gpgkey} ]]; then
         su ${OWNER} -c "gpg --export ${gpgkey} >${USERCONFDIR}/gpgkey"
         exec 17<>${USERCONFDIR}/gpgkey
     fi
     MISO_GNUPG_FD=${gpgkey:+17} chroot-run $1 \
-        /usr/bin/mkinitcpio -p ${_profile} \
+        /usr/bin/mkinitcpio -k ${_kernver} \
         -c /etc/mkinitcpio-${iso_name}.conf \
         -g /boot/initramfs.img
 
