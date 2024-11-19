@@ -145,7 +145,7 @@ write_displaymanager_conf(){
     echo '' >> "$conf"
     echo "basicSetup: false" >> "$conf"
     echo "sddm:" >> "$conf"
-    if [[ -e "${work_dir}/desktopfs/etc/sddm.conf.d/kde_settings.conf" || "$1/etc/sddm.conf.d/kde_settings.conf" ]]; then
+    if [[ -e "$1/etc/sddm.conf.d/kde_settings.conf" ]]; then
         echo '  configuration_file: "/etc/sddm.conf.d/kde_settings.conf"' >> "$conf"
     else
         echo '  configuration_file: "/etc/sddm.conf"' >> "$conf"
@@ -417,7 +417,7 @@ write_settings_conf(){
     else
         echo "        - users" >> "$conf"
     fi
-    echo "        - displaymanager" >> "$conf" && write_displaymanager_conf
+    echo "        - displaymanager" >> "$conf" && write_displaymanager_conf "$1"
     if ${mhwd_used}; then
         echo "        - mhwdcfg" >> "$conf" && write_mhwdcfg_conf
     else
