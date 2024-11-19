@@ -144,6 +144,12 @@ write_displaymanager_conf(){
     echo "  - slim" >> "$conf"
     echo '' >> "$conf"
     echo "basicSetup: false" >> "$conf"
+    echo "sddm:" >> "$conf"
+    if [ -e "$1/etc/sddm.conf.d/kde_settings.conf" ]; then
+        echo '  configuration_file: "/etc/sddm.conf.d/kde_settings.conf"' >> "$conf"
+    else
+        echo '  configuration_file: "/etc/sddm.conf"' >> "$conf"
+    fi
 }
 
 write_initcpio_conf(){
