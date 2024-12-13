@@ -307,15 +307,15 @@ init_buildiso(){
 
     [[ -z ${dist_codename} ]] && dist_codename=$(get_codename)
 
-    dist_name=$(get_distname)
+    [[ -z ${dist_name} ]] && dist_name=$(get_distname)
 
-    iso_name=$(get_osid)
+    [[ -z ${iso_name}]] && iso_name=$(get_osid)
 
     [[ -z ${dist_branding} ]] && dist_branding="MANJARO"
 
     [[ -z ${iso_compression} ]] && iso_compression='zstd'
 
-    [[ -z ${kernel} ]] && kernel="linux54"
+    [[ -z ${kernel} ]] && kernel="linux66"
     
     load_run_dir "${profile_repo}"
     
@@ -325,7 +325,7 @@ init_buildiso(){
     	branch=$(git rev-parse --abbrev-ref HEAD)
     	cd ${current_path}
     else
-    	[[ -z ${branch} ]] && branch="v18.0" #current branch release
+    	[[ -z ${branch} ]] && branch="master" #current branch release
     fi
 
     [[ -z ${gpgkey} ]] && gpgkey=''
