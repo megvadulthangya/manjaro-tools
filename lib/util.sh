@@ -309,7 +309,7 @@ init_buildiso(){
 
     [[ -z ${dist_name} ]] && dist_name=$(get_distname)
 
-    [[ -z ${iso_name}]] && iso_name=$(get_osid)
+    [[ -z ${iso_name} ]] && iso_name=$(get_osid)
 
     [[ -z ${dist_branding} ]] && dist_branding="MANJARO"
 
