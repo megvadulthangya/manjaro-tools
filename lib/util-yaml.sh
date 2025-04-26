@@ -422,7 +422,7 @@ write_settings_conf(){
     else
         echo "        - users" >> "$conf"
     fi
-    echo "        - displaymanager" >> "$conf" && write_displaymanager_conf "$1"
+    #echo "        - displaymanager" >> "$conf" && write_displaymanager_conf "$1"
     if ${mhwd_used}; then
         echo "        - mhwdcfg" >> "$conf" && write_mhwdcfg_conf
     else
