@@ -358,29 +358,33 @@ make_image_desktop() {
         
         #TODO: tmp workaround to fix Steam fat-tarball download
         # Grab the steam bootstrap for first boot
-        PKG_URL="https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/steam-jupiter-stable-1.0.0.78-1.2-x86_64.pkg.tar.zst"
+        PKG_URL="https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/steam-jupiter-stable-1.0.0.81-2.2-x86_64.pkg.tar.zst"
         TMP_PKG="/tmp/package.pkg.tar.zst"
         OUTPUT_FILE="/tmp/bootstraplinux_ubuntu12_32.tar.xz"
         TARGET_FILE="${path}/usr/lib/steam/bootstraplinux_ubuntu12_32.tar.xz"
+
+        msg "Downloading steam/bootstraplinux_ubuntu12_32.tar.xz ..."
         curl -o "$TMP_PKG" "$PKG_URL"
-        ZST_CHECKSUM=e94242167c5af25a87b6ffd92963fa8c15263b9a2838bcc0c3a36f918e5ba21c64984be20f718096ff1fed4ec52d49846239695b573db21e1c4ffce9cd493bc1
+        ZST_CHECKSUM=22aec0a9b552a70ad8daee2851294a88b24c63394f146eef3033b4939d3fd4e0ece8434809e21bfb4c35e66a57e1e34178625d7e73205b073dd9be9908188b4e
         TMP_PKG_CHECKSUM=$(sha512sum ${TMP_PKG} | cut -d " " -f1)
         if [[ "$ZST_CHECKSUM" == "$TMP_PKG_CHECKSUM" ]]; then
+            msg "Extracting $OUTPUT_FILE"
             tar -I zstd -xvf "$TMP_PKG" usr/lib/steam/bootstraplinux_ubuntu12_32.tar.xz -O > "$OUTPUT_FILE"
         else
-            msg "Download of ${PKG_URL} failed!"
+            msg "Download of $OUTPUT_FILE failed!"
             exit 1
         fi
-        XZ_CHECKSUM=17b7011fe7ae13834aa1f722724abfc3829ef8632bbabec2ae6b53ef0a9b6f1fc4db61b32056c62401e5aeb001e0f00d9e20f8ea045347b91cbe84ad4d0a919b
+        XZ_CHECKSUM=d2825b4c1d320e367fc99ff9cdb1bb32f24745c60984dbbc9fede81ee3673beaf7c384f70bb4993272e8c70154f9794e009cf2a84a7a24a588ac93493b47a8af
         BS_CHECKSUM=$(sha512sum ${OUTPUT_FILE} | cut -d " " -f1)
         if [[ "$XZ_CHECKSUM" == "$BS_CHECKSUM" ]]; then
+            msg "moving $OUTPUT_FILE to $TARGET_FILE"
             mv "$OUTPUT_FILE" "$TARGET_FILE"
         else
-            msg "Extraction of ${TARGET_FILE} failed!"
+            msg "Extraction of steam/bootstraplinux_ubuntu12_32.tar.xz failed!"
             exit 1
         fi
-        [[ -e "$TMP_PKG" ]] && rm "$TMP_PKG"
-        [[ -e "$OUTPUT_FILE" ]] && rm "$OUTPUT_FILE"
+        [[ -e "$TMP_PKG" ]] && rm -v "$TMP_PKG"
+        [[ -e "$OUTPUT_FILE" ]] && rm -v "$OUTPUT_FILE"
 
         pacman -Qr "${path}" > "${path}/desktopfs-pkgs.txt"
         cp "${path}/desktopfs-pkgs.txt" ${iso_dir}/$(gen_iso_fn)-pkgs.txt
