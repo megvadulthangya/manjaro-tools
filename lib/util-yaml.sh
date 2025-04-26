@@ -397,12 +397,12 @@ write_settings_conf(){
     fi
     echo "        - machineid" >> "$conf" && write_machineid_conf
     if ${oem_used}; then
-        msg2 "Skipping to set locale, keyboard and localecfg modules."
+        msg2 "Skipping to set locale, keyboard modules."
     else
         echo "        - locale" >> "$conf"
         echo "        - keyboard" >> "$conf"
-        echo "        - localecfg" >> "$conf"
     fi
+    echo "        - localecfg" >> "$conf"
     echo "        - luksbootkeyfile" >> "$conf"
     echo "        - luksopenswaphookcfg" >> "$conf"
     echo "        - fstab" >> "$conf"
