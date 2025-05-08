@@ -195,7 +195,12 @@ write_users_conf(){
     echo "avatarFilePath:  ~/.face" >> "$conf" # mostly used file-name for avatar
     if [[ -n "$user_shell" ]]; then
         echo "userShell:       $user_shell" >> "$conf"
-    fi    
+        # Support 3.3.x
+        echo "user:" >> "$conf"
+        echo "  shell: $user_shell" >> "$conf"
+        echo "  forbidden_names: [ root ]" >> "$conf"
+        echo '  home_permissions: "o700"' >> "$conf"
+    fi   
 }
 
 write_partition_conf(){
