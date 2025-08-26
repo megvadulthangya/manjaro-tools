@@ -451,6 +451,7 @@ load_profile_config(){
 
     [[ -z ${oem_used} ]] && oem_used='false'
     [[ -z ${set_oem_user} ]] && set_oem_user='true'
+    [[ -z ${oem_use_postcfg} ]] && oem_use_postcfg='false'
 
     [[ -z ${chrootcfg} ]] && chrootcfg='false'
 
