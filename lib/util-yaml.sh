@@ -186,6 +186,7 @@ write_users_conf(){
     unset IFS
     echo "autologinGroup:  autologin" >> "$conf"
     echo "doAutologin:     false" >> "$conf" # can be either 'true' or 'false'
+    echo "displayAutologin:   true" >> "$conf" # can be either 'true' or 'false'
     echo "sudoersGroup:    wheel" >> "$conf"
     echo "passwordRequirements:" >> "$conf"
     echo "    nonempty: true" >> "$conf" # can be either 'true' or 'false'
