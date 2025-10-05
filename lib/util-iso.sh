@@ -484,8 +484,12 @@ make_image_boot() {
         prepare_initramfs "${path}"
 
         cp ${path}/boot/initramfs.img ${boot}/initramfs-${target_arch}.img
-        prepare_boot_extras "${path}" "${boot}"
 
+        # prepare boot extras using a keyword
+        [[ -f ${path}/boot/amd-ucode.img ]] && prepare_boot_extras "${path}" "${boot}" "amd"
+        [[ -f ${path}/boot/intel-ucode.img ]] && prepare_boot_extras "${path}" "${boot}" "intel"
+        [[ -f ${path}/boot/memtest86+/memtest.bin ]] && prepare_boot_extras "${path}" "${boot}" "memtest"
+        
         umount_fs
 
         rm -R ${path}

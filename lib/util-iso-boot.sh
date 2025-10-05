@@ -36,12 +36,21 @@ prepare_initramfs(){
     fi
 }
 
+# $1 source path
+# $2 target path
+# $3 boot extra
 prepare_boot_extras(){
-    cp $1/boot/amd-ucode.img $2/amd_ucode.img
-    cp $1/boot/intel-ucode.img $2/intel_ucode.img
-    cp $1/usr/share/licenses/amd-ucode/LIC* $2/amd_ucode.LICENSE
-    cp $1/usr/share/licenses/intel-ucode/LIC* $2/intel_ucode.LICENSE
-    cp $1/boot/memtest86+/memtest.bin $2/memtest
+    if [[ $3 == "amd" ]]; then
+        cp $1/boot/amd-ucode.img $2/amd_ucode.img
+        cp $1/usr/share/licenses/amd-ucode/LIC* $2/amd_ucode.LICENSE
+    fi
+    if [[ $3 == "intel" ]]; then
+        cp $1/boot/intel-ucode.img $2/intel_ucode.img
+        cp $1/usr/share/licenses/intel-ucode/LIC* $2/intel_ucode.LICENSE
+    fi
+    if [[ $3 == "memtest" ]]; then
+        cp $1/boot/memtest86+/memtest.bin $2/memtest
+    fi
 }
 
 prepare_grub(){
