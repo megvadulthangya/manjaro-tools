@@ -43,10 +43,16 @@ prepare_boot_extras(){
     if [[ $3 == "amd" ]]; then
         cp $1/boot/amd-ucode.img $2/amd_ucode.img
         cp $1/usr/share/licenses/amd-ucode/LIC* $2/amd_ucode.LICENSE
+    else
+        # adjust the grub configuration - remove amd ucode
+        sed 's|\/boot\/amd_ucode.img||g' $2/grub/kernels.cfg
     fi
     if [[ $3 == "intel" ]]; then
         cp $1/boot/intel-ucode.img $2/intel_ucode.img
         cp $1/usr/share/licenses/intel-ucode/LIC* $2/intel_ucode.LICENSE
+    else
+        # adjust the grub configuration - remove intel ucode
+        sed 's|\/boot\/intel_ucode.img||g' $2/grub/kernels.cfg
     fi
     if [[ $3 == "memtest" ]]; then
         cp $1/boot/memtest86+/memtest.bin $2/memtest
