@@ -43,30 +43,39 @@ prepare_boot_extras(){
     if [[ $3 == "amd" ]]; then
         cp $1/boot/amd-ucode.img $2/amd_ucode.img
         cp $1/usr/share/licenses/amd-ucode/LIC* $2/amd_ucode.LICENSE
-    else
-        # adjust the grub configuration - remove amd ucode
-        sed 's|\/boot\/amd_ucode.img||g' $2/grub/kernels.cfg
     fi
     if [[ $3 == "intel" ]]; then
         cp $1/boot/intel-ucode.img $2/intel_ucode.img
         cp $1/usr/share/licenses/intel-ucode/LIC* $2/intel_ucode.LICENSE
-    else
-        # adjust the grub configuration - remove intel ucode
-        sed 's|\/boot\/intel_ucode.img||g' $2/grub/kernels.cfg
     fi
     if [[ $3 == "memtest" ]]; then
         cp $1/boot/memtest86+/memtest.bin $2/memtest
     fi
 }
 
+# $1 boot dir
+adjust_kernel_cmdline(){
+    if ! [[ -f "intel-ucode.img" ]]; then
+        # adjust the grub configuration - remove intel ucode
+        sed 's|\/boot\/intel_ucode.img||g' $2/grub/kernels.cfg
+    fi
+    if ! [[ -f "amd-ucode.img" ]]; then
+        # adjust the grub configuration - remove intel ucode
+        sed 's|\/boot\/amd_ucode.img||g' $2/grub/kernels.cfg
+    fi    
+}
+
 prepare_grub(){
     local platform=i386-pc img='core.img' grub=$2/boot/grub efi=$2/efi/boot \
         data_live=$1/usr/share/grub lib=usr/lib/grub prefix=/boot/grub data=/usr/share/grub \
-        path="${work_dir}/rootfs"
+        path="${work_dir}/rootfs" boot_dir="$2/boot"
 
     prepare_dir ${grub}/${platform}
 
     cp ${data_live}/cfg/*.cfg ${grub}
+
+    # adjust cmdline to remove unavailable ucode image
+    adjust_kernel_cmdline ${boot_dir}
 
     cp ${path}/${lib}/${platform}/* ${grub}/${platform}
 
