@@ -1,4 +1,4 @@
-name: Sync master from Manjaro GitLab (safe)
+name: Sync master from Manjaro GitLab
 
 on:
   schedule:
@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout GitHub repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -30,7 +30,7 @@ jobs:
 
       - name: Merge GitLab master into GitHub master
         run: |
-          git checkout master
+          git checkout -B master origin/master   # ← biztosítja, hogy a GitHub aktuális master ágáról indulunk
           git merge gitlab/master --no-edit || true
 
       - name: Push changes to GitHub
