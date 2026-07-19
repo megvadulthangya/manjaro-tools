@@ -587,6 +587,11 @@ configure_live_image(){
     configure_calamares "$1"
 #    [[ ${edition} == "sonar" ]] && configure_thus "$1"
     write_live_session_conf "$1"
+    # Workaround for: https://forum.manjaro.org/t/188886
+    msg2 "calling manjaro-live ..."
+    chroot $1 /usr/bin/manjaro-live
+    msg2 "disabling manjaro-live.service ..."
+    chroot $1 systemctl disable manjaro-live.service
     msg "Done configuring [livefs]"
 }
 
