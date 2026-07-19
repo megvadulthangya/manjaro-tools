@@ -579,6 +579,10 @@ configure_thus(){
 #    fi
 }
 
+gen_pw(){
+	echo $(openssl passwd -6 ${password})
+}
+
 configure_live_image(){
     msg "Configuring [livefs]"
     configure_hosts "$1"
@@ -588,10 +592,13 @@ configure_live_image(){
 #    [[ ${edition} == "sonar" ]] && configure_thus "$1"
     write_live_session_conf "$1"
     # Workaround for: https://forum.manjaro.org/t/188886
-    msg2 "calling manjaro-live ..."
-    chroot $1 /usr/bin/manjaro-live
-    msg2 "disabling manjaro-live.service ..."
-    chroot $1 systemctl disable manjaro-live.service
+    msg2 "Creating user ..."
+    if [[ -n ${password} ]];then
+        chroot $1 useradd -m -G ${addgroups} -p $(gen_pw) -s ${login_shell} ${username}
+    else
+        chroot $1 useradd -m -G ${addgroups} -s ${login_shell} ${username}
+    fi
+    chroot $1 cat /etc/passwd | grep ${username}
     msg "Done configuring [livefs]"
 }
 
