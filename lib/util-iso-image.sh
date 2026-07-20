@@ -592,13 +592,9 @@ configure_live_image(){
 #    [[ ${edition} == "sonar" ]] && configure_thus "$1"
     write_live_session_conf "$1"
     # Workaround for: https://forum.manjaro.org/t/188886
-    msg2 "Creating user ..."
-    if [[ -n ${password} ]];then
-        chroot $1 useradd -m -G ${addgroups} -p $(gen_pw) -s ${login_shell} ${username}
-    else
-        chroot $1 useradd -m -G ${addgroups} -s ${login_shell} ${username}
-    fi
-    chroot $1 cat /etc/passwd | grep ${username}
+    msg2 "Call manjaro-live-setup ..."
+    chroot $1 /usr/bin/manjaro-live-setup
+    chroot $1 /var/log/manjaro-live-setup.log
     msg "Done configuring [livefs]"
 }
 
