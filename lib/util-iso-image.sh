@@ -579,6 +579,10 @@ configure_thus(){
 #    fi
 }
 
+gen_pw(){
+	echo $(openssl passwd -6 ${password})
+}
+
 configure_live_image(){
     msg "Configuring [livefs]"
     configure_hosts "$1"
@@ -587,6 +591,10 @@ configure_live_image(){
     configure_calamares "$1"
 #    [[ ${edition} == "sonar" ]] && configure_thus "$1"
     write_live_session_conf "$1"
+    # Workaround for: https://forum.manjaro.org/t/188886
+    msg2 "Call manjaro-live-setup ..."
+    chroot $1 /usr/bin/manjaro-live-setup
+    chroot $1 cat /var/log/manjaro-live-setup.log
     msg "Done configuring [livefs]"
 }
 
