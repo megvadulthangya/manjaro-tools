@@ -594,7 +594,7 @@ configure_live_image(){
     # Workaround for: https://forum.manjaro.org/t/188886
     msg2 "Call manjaro-live-setup ..."
     chroot $1 /usr/bin/manjaro-live-setup
-    chroot $1 /var/log/manjaro-live-setup.log
+    chroot $1 cat /var/log/manjaro-live-setup.log
     msg "Done configuring [livefs]"
 }
 
