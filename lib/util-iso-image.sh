@@ -702,11 +702,16 @@ clean_up_image(){
     fi
 	find "$1" -name *.pacnew -name *.pacsave -name *.pacorig -delete
 	file=$1/boot/grub/grub.cfg
-        if [[ -f "$file" ]]; then
-            rm $file
-        fi
-        files=("$1/etc/machine-info" "$1/etc/machine-id" "$1/var/lib/systemd/random-seed" "$1/var/lib/systemd/credential.secret")
-        for file in ${files[@]}; do
-        	[[ -e "$file" ]] && rm -v $file
-        done
+    if [[ -f "$file" ]]; then
+        rm $file
+    fi
+	file=$1/etc/machine-id
+    if [[ -f "$file" ]]; then
+       rm $file
+    fi
+
+    #files=("$1/etc/machine-info" "$1/etc/machine-id" "$1/var/lib/systemd/random-seed" "$1/var/lib/systemd/credential.secret")
+    #for file in ${files[@]}; do
+    #	[[ -e "$file" ]] && rm -v $file
+    #done
 }
