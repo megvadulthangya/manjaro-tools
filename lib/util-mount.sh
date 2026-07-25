@@ -14,7 +14,10 @@ ignore_error() {
 }
 
 parse_fstab(){
-    echo $(perl -ane 'printf("%s:%s\n", @F[0,1]) if $F[0] =~ m#^UUID=#;' $1/etc/fstab)
+    local fstab="/etc/fstab"
+    # check if `@` in $1 signifying the use of btrfs
+    [ -d "$1/@" ] && fstab="/@/etc/fstab"
+    echo $(perl -ane 'printf("%s:%s\n", @F[0,1]) if $F[0] =~ m#^UUID=#;' $1${fstab})
 # 	perl -ane 'printf("%s:%s\n", @F[0,1]) if $F[0] =~ m#^/dev#;' $1/etc/fstab
 # 	perl -ane 'printf("%s:%s\n", @F[0,1]) if $F[0] =~ m#^LABEL=#;' $1/etc/fstab
 }
