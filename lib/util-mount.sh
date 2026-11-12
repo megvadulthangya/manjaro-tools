@@ -44,13 +44,18 @@ get_chroot_arch(){
 
 chroot_part_mount() {
     info "mount: [%s]" "$2"
-    mount "$@" && CHROOT_ACTIVE_PART_MOUNTS=("$2" "${CHROOT_ACTIVE_PART_MOUNTS[@]}")
+    if [[ -z $3 ]]; then
+        mount "$@" && CHROOT_ACTIVE_PART_MOUNTS=("$2" "${CHROOT_ACTIVE_PART_MOUNTS[@]}")
+    else
+        mount -o subvol="$3" "$1" "$2" && CHROOT_ACTIVE_PART_MOUNTS=("$2" "${CHROOT_ACTIVE_PART_MOUNTS[@]}")
+        # How to mount all subvols in $1
+    fi
 }
 
 select_os(){
-    local detected_os_list=( $(detect) ) os_list=() count select os_str os_root
+    local detected_os_list=( $(detect) ) os_list=() count select os_str os_root root_subvol
     for os in ${detected_os_list[@]}; do
-        case ${os##*:} in
+        case $(cut -d: -f4 <<< "$os") in
             'linux') os_list+=($os)
         esac
     done
@@ -71,8 +76,14 @@ select_os(){
     fi
     os_str=${os_list[$select]}
     os_root=${os_str%%:*}
-    msg "Mounting (%s) [%s]" "$(get_os_name $os_str)" "$os_root"
-    chroot_mount_partitions "$1" "$os_root"
+    root_subvol="${os_str##*:subvol=}"
+    [[ "$root_subvol" == "$os_str" ]] && root_subvol=""
+    if [[ -z "$root_subvol" ]]; then
+        msg "Mounting (%s) [%s]" "$(get_os_name $os_str)" "$os_root"
+    else
+        msg "Mounting (%s) [%s subvol=%s]" "$(get_os_name $os_str)" "$os_root" "$root_subvol"
+    fi
+    chroot_mount_partitions "$1" "$os_root" "$root_subvol"
 }
 
 chroot_mount_partitions(){
@@ -83,7 +94,7 @@ chroot_mount_partitions(){
     [[ $(trap -p EXIT) ]] && die 'Error! Attempting to overwrite existing EXIT trap'
     trap 'trap_handler' EXIT
 
-    chroot_part_mount $2 $1
+    chroot_part_mount $2 $1 $3
 
     local mounts=$(parse_fstab "$1")
 
